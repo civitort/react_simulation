@@ -44,5 +44,16 @@
   "devDependencies": {
     "electron": "^22.0.2",
     "electron-builder": "^23.6.0"
-  }
+  },
+  "main": "electron/main.js",
+	"homepage": "./",
+	"build": {
+		"appId": "com.example.myapp",
+		"productName": "myapp",
+		"extends": null,
+		"files": [
+			"electron/**/*",
+			"build/**/*"
+		]
+	}
 }
