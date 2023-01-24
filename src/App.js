@@ -11,11 +11,11 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { useReducer } from "react";
+import { useReducer, useState } from "react";
 import InputTitle from "./components/atoms/InputTitle";
 import HeaderLayout from "./components/layouts/HeaderLayout";
 import { theme } from "./styles/Theme";
-
+import axios from "axios";
 const initialState = {
   data_option: {
     data: "",
@@ -29,31 +29,44 @@ const initialState = {
   api_data: {},
 };
 
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "change_calc_option":
-      return {
-        ...state,
-        calc_option: {
-          ...state.calc_option,
-          [action.field]: action.payload,
-        },
-      };
-    case "change_data_option":
-      return {
-        ...state,
-        data_option: {
-          ...state.data_option,
-          [action.field]: action.payload,
-        },
-      };
-    default:
-      throw new Error();
-  }
-};
+
 
 function App() {
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case "change_calc_option":
+        return {
+          ...state,
+          calc_option: {
+            ...state.calc_option,
+            [action.field]: action.payload,
+          },
+        };
+      case "change_data_option":
+        return {
+          ...state,
+          data_option: {
+            ...state.data_option,
+            [action.field]: action.payload,
+          },
+        };
+      default:
+        throw new Error();
+    }
+  };
+  
   const [state, dispatch] = useReducer(reducer, initialState);
+  
+  const [apiData, setApiData] = useState();
+  const buttonClicked = async () => {
+    var dir = (state.data_option.dir === "1") ? "up" : "down";
+    var url = state.data_option.data + dir
+    const res = await axios.get(
+      `https://civitort.github.io/JSONAPI/${url}.json`
+    );
+    setApiData(res.data);
+  };
+  console.log(apiData);
   return (
     <ChakraProvider resetCSS={true} theme={theme}>
       <Box textAlign={"left"} p="0">
@@ -77,8 +90,8 @@ function App() {
                       })
                     }
                   >
-                    <option value="option1">データ 1</option>
-                    <option value="option2">データ 2</option>
+                    <option value="data1">データ 1</option>
+                    <option value="data2">データ 2</option>
                   </Select>
                 </>
                 <>
@@ -116,7 +129,7 @@ function App() {
                       <Radio value="2">下り</Radio>
                     </Stack>
                   </RadioGroup>
-                  <Button>読込</Button>
+                  <Button onClick={buttonClicked}>読込</Button>
                 </>
               </HStack>
             </Box>
@@ -153,7 +166,6 @@ function App() {
                     }
                   />
                 </>
-                
               </HStack>
             </Box>
           </Box>
