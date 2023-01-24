@@ -3,6 +3,8 @@ import {
   Button,
   ChakraProvider,
   Container,
+  Grid,
+  GridItem,
   HStack,
   Input,
   Radio,
@@ -82,8 +84,7 @@ function App() {
             ? state.calc_option.capacity_jutai
             : state.calc_option.capacity_normal;
         // 捌け残り交通量
-        var remain =
-          result[index][cols.all] - result[index][cols.yoryo];
+        var remain = result[index][cols.all] - result[index][cols.yoryo];
         result[index][cols.remain] = remain > 0 ? remain : 0;
         // 累積交通量
         var remain_all =
@@ -130,23 +131,23 @@ function App() {
           data_option: {
             ...state.data_option,
             [action.field]: action.payload,
-          }
+          },
         };
         if (apiData !== undefined) {
           var dat = calcHourData(apiData, result);
           result = {
             ...result,
-            view_data: dat
-          }
+            view_data: dat,
+          };
         }
         return result;
       }
-      case "reset_data": 
+      case "reset_data":
         var dat = calcHourData(apiData, state);
         return {
           ...state,
-          view_data : dat
-        }
+          view_data: dat,
+        };
       default:
         throw new Error();
     }
@@ -163,8 +164,8 @@ function App() {
     );
     setApiData(res.data);
     dispatch({
-      type:"reset_data"
-    })
+      type: "reset_data",
+    });
     setReading(false);
   };
   return (
@@ -173,188 +174,195 @@ function App() {
         <HeaderLayout>
           <Text fontSize={"16px"}>渋滞シミュレーション</Text>
         </HeaderLayout>
-        <Container maxW="container.xl">
-          <Box m={"1em"} my={"2em"}>
-            <InputTitle name="データ指定" />
-            <Box border={"1px"} p="1.5em">
-              <Text fontSize={"20px"}>データ指定</Text>
-              <HStack>
-                <>
-                  <Select
-                    maxW={"200px"}
-                    onChange={(e) =>
-                      dispatch({
-                        type: "change_data_option",
-                        field: "data",
-                        payload: e.currentTarget.value,
-                      })
-                    }
-                  >
-                    <option value="data1">データ 1</option>
-                    <option value="data2">データ 2</option>
-                  </Select>
-                </>
-                <>
-                  <Text maxW={"100px"}>区間</Text>
-                  <RadioGroup
-                    px="8px"
-                    onChange={(e) =>
-                      dispatch({
-                        type: "change_data_option",
-                        field: "kukan",
-                        payload: e,
-                      })
-                    }
-                  >
-                    <Stack direction="row">
-                      <Radio value="1">A</Radio>
-                      <Radio value="2">B</Radio>
+        <Container maxW="container.2xl">
+        <Box m={"1em"} my={"2em"}>
+                <InputTitle name="データ指定" />
+                <Box border={"1px"} p="1.5em">
+                  <Text fontSize={"20px"}>データ指定</Text>
+                  <HStack>
+                    <>
+                      <Select
+                        maxW={"200px"}
+                        onChange={(e) =>
+                          dispatch({
+                            type: "change_data_option",
+                            field: "data",
+                            payload: e.currentTarget.value,
+                          })
+                        }
+                      >
+                        <option value="data1">データ 1</option>
+                        <option value="data2">データ 2</option>
+                      </Select>
+                    </>
+                    <>
+                      <Text maxW={"100px"}>区間</Text>
+                      <RadioGroup
+                        px="8px"
+                        onChange={(e) =>
+                          dispatch({
+                            type: "change_data_option",
+                            field: "kukan",
+                            payload: e,
+                          })
+                        }
+                      >
+                        <Stack direction="row">
+                          <Radio value="1">A</Radio>
+                          <Radio value="2">B</Radio>
+                        </Stack>
+                      </RadioGroup>
+                    </>
+                    <>
+                      <Text maxW={"100px"}>上下</Text>
+                      <RadioGroup
+                        px="8px"
+                        onChange={(e) =>
+                          dispatch({
+                            type: "change_data_option",
+                            field: "dir",
+                            payload: e,
+                          })
+                        }
+                      >
+                        <Stack direction="row">
+                          <Radio value="1">上り</Radio>
+                          <Radio value="2">下り</Radio>
+                        </Stack>
+                      </RadioGroup>
+                      <Button onClick={buttonClicked}>読込</Button>
+                      <Text>{reading ? "読み込み中..." : ""}</Text>
+                    </>
+                  </HStack>
+                  {apiData === undefined ? (
+                    ""
+                  ) : (
+                    <Stack pt="1em" direction={"row"}>
+                      <Text>区間:{apiData.name}</Text>
+                      <Text>方向:{apiData.direction}</Text>
                     </Stack>
-                  </RadioGroup>
-                </>
-                <>
-                  <Text maxW={"100px"}>上下</Text>
-                  <RadioGroup
-                    px="8px"
-                    onChange={(e) =>
-                      dispatch({
-                        type: "change_data_option",
-                        field: "dir",
-                        payload: e,
-                      })
-                    }
-                  >
-                    <Stack direction="row">
-                      <Radio value="1">上り</Radio>
-                      <Radio value="2">下り</Radio>
-                    </Stack>
-                  </RadioGroup>
-                  <Button onClick={buttonClicked}>読込</Button>
-                  <Text>{reading ? "読み込み中..." : ""}</Text>
-                </>
-              </HStack>
-              {apiData === undefined ? (
-                ""
-              ) : (
-                <Stack pt="1em" direction={"row"}>
-                  <Text>区間:{apiData.name}</Text>
-                  <Text>方向:{apiData.direction}</Text>
-                </Stack>
-              )}
-            </Box>
-          </Box>
-          <Box m={"1em"} my={"2em"}>
-            <InputTitle name="基本項目" />
-            <Box border={"1px"} p="1.5em">
-              <Text fontSize={"20px"}>交通容量</Text>
-              <HStack>
-                <>
-                  <Text maxW={"100px"}>通常時</Text>
-                  <Input
-                    maxW={"100px"}
-                    defaultValue={1500}
-                    onChange={(e) =>
-                      dispatch({
-                        type: "change_calc_option",
-                        field: "capacity_normal",
-                        payload: Number(e.currentTarget.value),
-                      })
-                    }
-                  />
-                </>
-                <>
-                  <Text maxW={"100px"}>混雑時</Text>
-                  <Input
-                    maxW={"100px"}
-                    defaultValue={1200}
-                    onChange={(e) =>
-                      dispatch({
-                        type: "change_calc_option",
-                        field: "capacity_jutai",
-                        payload: Number(e.currentTarget.value),
-                      })
-                    }
-                  />
-                </>
-              </HStack>
-            </Box>
-            <Box border={"1px"} p="1.5em">
-              <HStack>
-                <>
-                  <Text maxW={"100px"}>大型車換算値：</Text>
-                  <Input
-                    maxW={"100px"}
-                    defaultValue={2.5}
-                    onChange={(e) =>
-                      dispatch({
-                        type: "change_calc_option",
-                        field: "kanzan",
-                        payload: Number(e.currentTarget.value),
-                      })
-                    }
-                  />
-                </>
-                <>
-                  <Text maxW={"100px"}>車頭間隔：</Text>
-                  <Input
-                    maxW={"100px"}
-                    defaultValue={10}
-                    onChange={(e) =>
-                      dispatch({
-                        type: "change_calc_option",
-                        field: "carlen",
-                        payload: Number(e.currentTarget.value),
-                      })
-                    }
-                  />
-                  <Text maxW={"100px"}>車線数：</Text>
-                  <Input
-                    maxW={"100px"}
-                    defaultValue={2}
-                    onChange={(e) =>
-                      dispatch({
-                        type: "change_calc_option",
-                        field: "syasen",
-                        payload: Number(e.currentTarget.value),
-                      })
-                    }
-                  />
-                </>
-              </HStack>
-            </Box>
-          </Box>
-          <Box my={"1em"}>
-            <Text>データ:{state.data_option.data}</Text>
-            <Text>区間:{state.data_option.kukan}</Text>
-            <Text>上下:{state.data_option.dir}</Text>
-          </Box>
-          <>
-            <Text>通常時:{state.calc_option.capacity_normal}</Text>
-            <Text>渋滞時:{state.calc_option.capacity_jutai}</Text>
-          </>
-          <Box>
-            <Text>◆データ一覧（1時間ピッチ）</Text>
+                  )}
+                </Box>
+              </Box>
+          <Grid templateColumns={'450px 1fr'}>
+          <GridItem >
+              
+              <Box m={"1em"} my={"2em"}>
+                <InputTitle name="基本項目" />
+                <Box border={"1px"} p="1.5em">
+                  <Text fontSize={"20px"}>交通容量</Text>
+                  <HStack>
+                    <>
+                      <Text maxW={"100px"}>通常時</Text>
+                      <Input
+                        maxW={"100px"}
+                        defaultValue={1500}
+                        onChange={(e) =>
+                          dispatch({
+                            type: "change_calc_option",
+                            field: "capacity_normal",
+                            payload: Number(e.currentTarget.value),
+                          })
+                        }
+                      />
+                    </>
+                    <>
+                      <Text maxW={"100px"}>混雑時</Text>
+                      <Input
+                        maxW={"100px"}
+                        defaultValue={1200}
+                        onChange={(e) =>
+                          dispatch({
+                            type: "change_calc_option",
+                            field: "capacity_jutai",
+                            payload: Number(e.currentTarget.value),
+                          })
+                        }
+                      />
+                    </>
+                  </HStack>
+                </Box>
+                <Box border={"1px"} p="1.5em">
+                  <HStack>
+                    <>
+                      <Text maxW={"100px"}>大型車換算値：</Text>
+                      <Input
+                        maxW={"100px"}
+                        defaultValue={2.5}
+                        onChange={(e) =>
+                          dispatch({
+                            type: "change_calc_option",
+                            field: "kanzan",
+                            payload: Number(e.currentTarget.value),
+                          })
+                        }
+                      />
+                    </>
+                    <>
+                      <Text maxW={"100px"}>車頭間隔：</Text>
+                      <Input
+                        maxW={"100px"}
+                        defaultValue={10}
+                        onChange={(e) =>
+                          dispatch({
+                            type: "change_calc_option",
+                            field: "carlen",
+                            payload: Number(e.currentTarget.value),
+                          })
+                        }
+                      />
+                      <Text maxW={"100px"}>車線数：</Text>
+                      <Input
+                        maxW={"100px"}
+                        defaultValue={2}
+                        onChange={(e) =>
+                          dispatch({
+                            type: "change_calc_option",
+                            field: "syasen",
+                            payload: Number(e.currentTarget.value),
+                          })
+                        }
+                      />
+                    </>
+                  </HStack>
+                </Box>
+              </Box>
+              <Box my={"1em"}>
+                <Text>データ:{state.data_option.data}</Text>
+                <Text>区間:{state.data_option.kukan}</Text>
+                <Text>上下:{state.data_option.dir}</Text>
+              </Box>
+              <>
+                <Text>通常時:{state.calc_option.capacity_normal}</Text>
+                <Text>渋滞時:{state.calc_option.capacity_jutai}</Text>
+              </>
+            </GridItem>
+            <GridItem>
+              <Box>
+                <Text>◆データ一覧（1時間ピッチ）</Text>
 
-            <ViewTable
-              data={state.view_data}
-              column={[
-                "日付",
-                "時刻",
-                "普通車",
-                "大型車",
-                "換算",
-                "全車",
-                "累積",
-                "交通容量",
-                "残存交通",
-                "渋滞長",
-                "車頭間隔",
-              ]}
-            ></ViewTable>
-          </Box>
-          <>
-            <Text>グラフ描画</Text>
-          </>
+                <ViewTable
+                  data={state.view_data}
+                  column={[
+                    "日付",
+                    "時刻",
+                    "普通車",
+                    "大型車",
+                    "換算",
+                    "全車",
+                    "累積",
+                    "交通容量",
+                    "残存交通",
+                    "渋滞長",
+                    "車頭間隔",
+                  ]}
+                ></ViewTable>
+              </Box>
+              <>
+                <Text>グラフ描画</Text>
+              </>
+            </GridItem>
+          </Grid>
         </Container>
       </Box>
     </ChakraProvider>
