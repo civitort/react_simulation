@@ -27,3 +27,15 @@ Reactのビルド済みアプリ(build/index.html)をelectron上で描画する
 
 ### `npm run electron-package`
 electronアプリをexeファイルで保存(win用)
+
+## node_modules
+
+### chakra UI
+
+### electron, electron-builder
+
+### react-google-charts
+
+### react-window
+
+### react-hook-form
