@@ -29,8 +29,6 @@ const initialState = {
   api_data: {},
 };
 
-
-
 function App() {
   const reducer = (state, action) => {
     switch (action.type) {
@@ -54,17 +52,19 @@ function App() {
         throw new Error();
     }
   };
-  
+
   const [state, dispatch] = useReducer(reducer, initialState);
-  
+  const [reading, setReading] = useState(false);
   const [apiData, setApiData] = useState();
   const buttonClicked = async () => {
-    var dir = (state.data_option.dir === "1") ? "up" : "down";
-    var url = state.data_option.data + dir
+    setReading(true);
+    var dir = state.data_option.dir === "1" ? "up" : "down";
+    var url = state.data_option.data + dir;
     const res = await axios.get(
       `https://civitort.github.io/JSONAPI/${url}.json`
     );
     setApiData(res.data);
+    setReading(false);
   };
   console.log(apiData);
   return (
@@ -130,8 +130,14 @@ function App() {
                     </Stack>
                   </RadioGroup>
                   <Button onClick={buttonClicked}>読込</Button>
+                  <Text>{reading ? "読み込み中..." : ""}</Text>
                 </>
               </HStack>
+              {apiData === undefined ? "" : 
+              <Stack pt="1em" direction={"row"}>
+                 <Text>区間:{apiData.name}</Text>
+                 <Text>方向:{apiData.direction}</Text>
+                </Stack>}
             </Box>
           </Box>
           <Box m={"1em"} my={"2em"}>
