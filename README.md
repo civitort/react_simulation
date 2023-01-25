@@ -11,6 +11,12 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## デザインのイメージ
 
+- 現在のイメージ
+https://imgur.com/a/9WHwjiY
+
+- アウトプット例
+https://imgur.com/a/YauGlWt
+
 - 参考：
 https://camo.qiitausercontent.com/6f9dcf7f401b699e99e99e7820ee186cc11c18be/68747470733a2f2f71696974612d696d6167652d73746f72652e73332e61702d6e6f727468656173742d312e616d617a6f6e6177732e636f6d2f302f3435383339352f39333935343462302d616537322d643136632d376336322d3731346330616438386632392e676966
 - データや、交通容量を変える⇒react内部のグラフ描画用のstateを再計算してグラフを更新など
