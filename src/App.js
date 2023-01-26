@@ -454,8 +454,8 @@ function App() {
                 <InputTitle name="入力項目" />
                 <Box border={"1px"} p="1.5em">
                   <Text fontSize={"20px"}>交通容量</Text>
-                  <HStack>
-                    <>
+                  <Stack pl={"0.5em"}>
+                    <HStack>
                       <Text maxW={"100px"}>通常時</Text>
                       <Input
                         maxW={"100px"}
@@ -468,8 +468,8 @@ function App() {
                           })
                         }
                       />
-                    </>
-                    <>
+                      </HStack>
+                    <HStack>
                       <Text maxW={"100px"}>混雑時</Text>
                       <Input
                         maxW={"100px"}
@@ -482,13 +482,13 @@ function App() {
                           })
                         }
                       />
-                    </>
-                  </HStack>
+                    </HStack>
+                  </Stack>
                 </Box>
                 <Box border={"1px"} p="1.5em">
-                  <HStack>
-                    <>
-                      <Text maxW={"100px"}>大型車換算値：</Text>
+                  <Stack>
+                    <HStack>
+                      <Text w={"100px"}>大型車換算値</Text>
                       <Input
                         maxW={"100px"}
                         defaultValue={2.5}
@@ -500,9 +500,9 @@ function App() {
                           })
                         }
                       />
-                    </>
-                    <>
-                      <Text maxW={"100px"}>車頭間隔：</Text>
+                    </HStack>
+                    <HStack>
+                      <Text w={"100px"}>車頭間隔</Text>
                       <Input
                         maxW={"100px"}
                         defaultValue={10}
@@ -514,7 +514,9 @@ function App() {
                           })
                         }
                       />
-                      <Text maxW={"100px"}>車線数：</Text>
+                    </HStack>
+                    <HStack>
+                      <Text w={"100px"}>車線数</Text>
                       <Input
                         maxW={"100px"}
                         defaultValue={2}
@@ -526,10 +528,10 @@ function App() {
                           })
                         }
                       />
-                    </>
-                  </HStack>
-                  <>
-                    <Text>日付選択</Text>
+                    </HStack>
+                  
+                  <HStack>
+                    <Text w={"100px"}>日付</Text>
                     <Input
                       size="md"
                       type="date"
@@ -544,21 +546,19 @@ function App() {
                         })
                       }
                     />
-                  </>
+                  </HStack>
+                  </Stack>
                 </Box>
               </Box>
-              <Box my={"1em"}>
+              <Box m={"1em"} my={"2em"}>
+                <Text>●選択値 </Text>
                 <Text>データ:{state.data_option.data}</Text>
                 <Text>区間:{state.data_option.kukan}</Text>
                 <Text>上下:{state.data_option.dir}</Text>
-              </Box>
-              <>
                 <Text>通常時:{state.calc_option.capacity_normal}</Text>
                 <Text>渋滞時:{state.calc_option.capacity_jutai}</Text>
-              </>
-              <>
                 <Text>日付:{state.graph_option.day}</Text>
-              </>
+              </Box>
             </GridItem>
             <GridItem>
               <>
