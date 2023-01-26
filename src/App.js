@@ -10,6 +10,10 @@ import {
   Radio,
   RadioGroup,
   Select,
+  Slider,
+  SliderFilledTrack,
+  SliderThumb,
+  SliderTrack,
   Stack,
   Text,
 } from "@chakra-ui/react";
@@ -448,7 +452,7 @@ function App() {
               )}
             </Box>
           </Box>
-          <Grid templateColumns={"450px 1fr"}>
+          <Grid templateColumns={"550px 1fr"}>
             <GridItem>
               <Box m={"1em"} my={"2em"}>
                 <InputTitle name="入力項目" />
@@ -459,7 +463,8 @@ function App() {
                       <Text maxW={"100px"}>通常時</Text>
                       <Input
                         maxW={"100px"}
-                        defaultValue={1500}
+                        defaultValue={state.calc_option.capacity_normal}
+                        value={state.calc_option.capacity_normal}
                         onChange={(e) =>
                           dispatch({
                             type: "change_calc_option",
@@ -468,12 +473,33 @@ function App() {
                           })
                         }
                       />
-                      </HStack>
+                      <Slider
+                        defaultValue={1500}
+                        min={0}
+                        max={2000}
+                        step={10}
+                        pl={"4px"}
+                        w={"250px"}
+                        onChange={(e) =>
+                          dispatch({
+                            type: "change_calc_option",
+                            field: "capacity_normal",
+                            payload: Number(e),
+                          })
+                        }
+                      >
+                        <SliderTrack>
+                          <SliderFilledTrack />
+                        </SliderTrack>
+                        <SliderThumb boxSize={5} />
+                      </Slider>
+                    </HStack>
                     <HStack>
                       <Text maxW={"100px"}>混雑時</Text>
                       <Input
                         maxW={"100px"}
-                        defaultValue={1200}
+                        defaultValue={state.calc_option.capacity_jutai}
+                        value={state.calc_option.capacity_jutai}
                         onChange={(e) =>
                           dispatch({
                             type: "change_calc_option",
@@ -482,6 +508,26 @@ function App() {
                           })
                         }
                       />
+                      <Slider
+                        defaultValue={1200}
+                        min={0}
+                        max={2000}
+                        step={10}
+                        pl={"4px"}
+                        w={"250px"}
+                        onChange={(e) =>
+                          dispatch({
+                            type: "change_calc_option",
+                            field: "capacity_jutai",
+                            payload: Number(e),
+                          })
+                        }
+                      >
+                        <SliderTrack>
+                          <SliderFilledTrack />
+                        </SliderTrack>
+                        <SliderThumb boxSize={5} />
+                      </Slider>
                     </HStack>
                   </Stack>
                 </Box>
@@ -529,24 +575,24 @@ function App() {
                         }
                       />
                     </HStack>
-                  
-                  <HStack>
-                    <Text w={"100px"}>日付</Text>
-                    <Input
-                      size="md"
-                      type="date"
-                      defaultValue={"2019-01-01"}
-                      max="2021-12-31"
-                      min="2021-01-01"
-                      onChange={(e) =>
-                        dispatch({
-                          type: "change_graph_option",
-                          field: "day",
-                          payload: e.currentTarget.value,
-                        })
-                      }
-                    />
-                  </HStack>
+
+                    <HStack>
+                      <Text w={"100px"}>日付</Text>
+                      <Input
+                        size="md"
+                        type="date"
+                        defaultValue={"2021-01-01"}
+                        max="2021-12-31"
+                        min="2021-01-01"
+                        onChange={(e) =>
+                          dispatch({
+                            type: "change_graph_option",
+                            field: "day",
+                            payload: e.currentTarget.value,
+                          })
+                        }
+                      />
+                    </HStack>
                   </Stack>
                 </Box>
               </Box>
